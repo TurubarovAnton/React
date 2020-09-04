@@ -25,21 +25,21 @@ namespace React.Controllers
 
         private string generateToken(string name)
         {
-            /*JwtSecurityToken jwt = new JwtSecurityToken(claims: new Claim[]
+            JwtSecurityToken jwt = new JwtSecurityToken(claims: new Claim[]
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, name),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, "Мамин ебарь"),
             }, signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Security:Secret"])), SecurityAlgorithms.HmacSha256));
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);*/
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return (new JwtBuilder())
+            /*return (new JwtBuilder())
                 .AddClaim(ClaimsIdentity.DefaultNameClaimType, name)
                 .AddClaim(ClaimsIdentity.DefaultRoleClaimType, "Мамин ебарь")
                 .WithAlgorithm(new HMACSHA256Algorithm())
                 .WithSecret((new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Security:Secret"]))).Key)
                 //.DoNotVerifySignature()
-                .Encode();
+                .Encode();*/
         }
 
 
