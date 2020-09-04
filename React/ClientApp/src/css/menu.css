@@ -1,0 +1,107 @@
+﻿
+:root {
+    --menu-margin: 300px;
+}
+
+nav {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    min-height: 35px;
+    background-color: #4f7c8d;
+    color: white;
+    z-index: 1000;
+}
+
+    nav label {
+        margin-bottom: auto;
+    }
+
+main {
+    margin-left: unset;
+    margin-top: 36px;
+    padding: 10px;
+}
+
+nav ul {
+    display: none;
+    margin: unset;
+    padding: unset;
+    height: 0px;
+    list-style-type: none;
+    transition: height 0.3s linear;
+}
+
+input#menu-toggle:checked + ul {
+    display: block;
+    height: 140px;
+}
+
+nav ul li {
+    margin-left: 15px;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+    nav ul li a {
+        cursor: pointer;
+        color: white;
+    }
+
+        nav ul li a:hover {
+            color: lightyellow;
+        }
+
+    nav ul li label {
+        cursor: pointer;
+    }
+
+nav .menu-panel {
+    display: flex;
+}
+
+nav .menu-button {
+    height: 18px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+nav .login-info {
+    display: inline-block;
+    margin-left: auto;
+    padding: 5px;
+}
+
+@media (min-width: 765px) {
+    nav {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: var(--menu-margin);
+        height: 100%;
+    }
+
+        nav ul {
+            display: block;
+            padding-top: 10px;
+        }
+
+        nav .menu-button {
+            display: none;
+        }
+
+        nav .login-info {
+            display: block;
+            margin-left: unset;
+            padding: 10px;
+            width: 100%;
+            border-bottom: thin ridge white;
+        }
+
+    main {
+        margin-top: unset;
+        margin-left: var(--menu-margin);
+    }
+}
