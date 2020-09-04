@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace React
 {
@@ -26,32 +27,45 @@ namespace React
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              .AddJwtBearer(options =>
-              {
-                  options.TokenValidationParameters = new TokenValidationParameters()
-                  { 
-                      ValidateActor = false,
-                      ValidateIssuer = false,
-                      ValidateAudience = false,
-                      ValidateIssuerSigningKey = false,                      
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:Secret"])), 
-                      RequireExpirationTime = false,
-                      ValidateLifetime = false
-                  };
-                  options.Events = new JwtBearerEvents()
-                  {
-                      OnMessageReceived = async context =>
-                      {
-                          if (context.Token == null)
-                              context.Token = context.HttpContext.Request.Cookies["access_token"];
-                      },
-                      OnAuthenticationFailed = async context =>
-                      {
-                          var exception = context.Exception;
-                      }
-                  };
-              });
+
+            // JWT template
+            /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    { 
+                        ValidateActor = false,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = false,                      
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:Secret"])), 
+                        RequireExpirationTime = false,
+                        ValidateLifetime = false
+                    };
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = async context =>
+                        {
+                            if (context.Token == null)
+                                context.Token = context.HttpContext.Request.Cookies["access_token"];
+                        },
+                        OnAuthenticationFailed = async context =>
+                        {
+                            var exception = context.Exception;
+                        }
+                    };
+                });*/
+
+            // Cookie template
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = "access_token";
+                    options.Events.OnRedirectToLogin = async context =>
+                    {
+                        context.Response.StatusCode = 401;
+                    };
+                });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

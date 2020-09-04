@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using JWT.Builder;
@@ -32,23 +33,20 @@ namespace React.Controllers
             }, signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Security:Secret"])), SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            /*return (new JwtBuilder())
-                .AddClaim(ClaimsIdentity.DefaultNameClaimType, name)
-                .AddClaim(ClaimsIdentity.DefaultRoleClaimType, "Мамин ебарь")
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret((new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Security:Secret"]))).Key)
-                //.DoNotVerifySignature()
-                .Encode();*/
         }
 
 
         [Route("api/login")]
         [HttpPost]
-        public object Login(string login, string password)
+        public async Task<object> Login(string login, string password)
         {
-            Response.Cookies.Delete("access_token");
-            Response.Cookies.Append("access_token", generateToken(login));
+            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, "Мамин ебарь")
+            }, CookieAuthenticationDefaults.AuthenticationScheme));
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return new
             {
